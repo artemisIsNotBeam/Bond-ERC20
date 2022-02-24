@@ -7,11 +7,12 @@ import "token/ERC20/ERC20.sol";
 //feel free to change any of the constructor code
 
 contract BondToken is ERC20 {
-    mapping (address => uint) owe;
+    mapping (address => uint) owe; 
     uint256 Supply = 20;
     uint256 PayDayDelay = 30 seconds;
     uint256 LastPayday = 0 seconds;
     uint256 amountForPayDay = 30; 
+    uint256 ethPerCoin = .1;
 
     event Withdraw(address reciever, uint amount);
     event Deposit(address sender, uint amount);
@@ -24,9 +25,19 @@ contract BondToken is ERC20 {
         uint256 give2 = msg.sender;
         require(now-PayDayDealy < LastPayDay);
 
-        //write more
-        //add owe to everyone who owns right
-        //do it in the owe array
+        /*
+        https://docs.bscscan.com/api-endpoints/tokens#get-token-holder-list-by-contract-address
+
+        will be having that entered
+        at position of the adreess
+
+        the thing added will be 
+        amount*ethPerCoin
+
+        can also set a minmium amount to claim
+        */
+
+
     }
 
     function putmoney(uint amountOfMoney) external{
