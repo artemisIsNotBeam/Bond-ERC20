@@ -1,2 +1,8 @@
 # Bond-ERC20
-acts as a bond ever x period they "airdrop" you y amount
+has 3 functions 
+## addOwe
+this adds the amount we "owe" to the array at their wallet where they can claim
+## withdrawAll
+this withdraws the amount we "owe" at owe[msg.sender]
+## depositIn contract
+put money to give out into the contract
