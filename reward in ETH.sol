@@ -21,13 +21,13 @@ contract BondToken is ERC20 {
         _mint(msg.sender, Supply);
     }    
     //now - PayDayDelay < LastPayday;
-    function addOwe() external{
-        uint256 give2 = msg.sender;
+    function addOwe(apiReuslts{}) external{
+        uint256 give2 = owe[msg.sender];
         require(now-PayDayDealy < LastPayDay);
 
         /*
         https://docs.bscscan.com/api-endpoints/tokens#get-token-holder-list-by-contract-address
-
+        gonna use this one: Get BEP-20 Token Account Balance by ContractAddress
         will be having that entered
         at position of the adreess
 
@@ -37,13 +37,9 @@ contract BondToken is ERC20 {
         can also set a minmium amount to claim
         */
 
-
-    }
-
-    function putmoney(uint amountOfMoney) external{
-        require(msg.value >= amountOfMoney);
-
-        
+        // this is gonna best test script so I know I have the function working
+        //owe[msg.sender] = apiResults["result"]
+        //that will result in a string will need to convert into number
     }
 
     // from  https://ethereum.stackexchange.com/questions/77750/sending-money-through-a-smart-contract
@@ -51,10 +47,11 @@ contract BondToken is ERC20 {
         uint amount = owe[msg.sender];
         require(owe[msg.sender] >= amount, "Insufficient funds");
         emit Withdrawal(msg.sender, amount);
-        balances[msg.sender] -= amount;
+        owe[msg.sender] -= amount;
     }
 
     function deposositIncontract(uint256 depositAmount) public payable{
+        require(msg.value >= depositAmount);
         Deposit(msg.sender, depositAmount);
     }
 }
