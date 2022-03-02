@@ -7,8 +7,9 @@ import "token/ERC20/IERC20.sol";
 //feel free to change any of the constructor code
 
 contract BondToken is ERC20 {
+    //arrays for adding owe
     mapping (address => uint) owe; 
-    mapping (address => address) walletList;
+    uint walletList = [];
     // all these variable you can change
     uint256 SupplyLeft = 300;
     uint256 ICOprice=.01;
@@ -33,9 +34,16 @@ contract BondToken is ERC20 {
 
 
     function amountTheyOwen(address person) public returns(uint){
-        IERC20(person).balanceOf(account);
+        return IERC20(tokenAdress).balanceOf(person);
     }
 
+
+    function registerWallet() public{
+        uint TheyOwn = amountTheyOwen(msg.sender);
+        if (TheyOwn > miniumAmount){
+            walletList.push(msg.sender);
+        }
+    }
     //now - PayDayDelay < LastPayday;
     function addOwe(uint payNow) external{
         require(now-PayDayDealy < LastPayDay);
