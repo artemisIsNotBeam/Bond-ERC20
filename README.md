@@ -1,8 +1,14 @@
 # Bond-ERC20
-has 3 functions 
+has 6 functions 
+## get Owns
+this returns how much a certain person owns
+## registerWallet 
+adds wallet to things to cycle through
 ## addOwe
-this adds the amount we "owe" to the array at their wallet where they can claim
+this goes throught the things in register wallet and and sees if they own then add them t owe
 ## withdrawAll
 this withdraws the amount we "owe" at owe[msg.sender]
 ## depositIn contract
 put money to give out into the contract
+## ico logic 
+this is logic for an ico where they can "buy" the token if you don't want to do an Uni Pool
