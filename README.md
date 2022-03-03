@@ -1,5 +1,6 @@
 # Bond-ERC20
 has 6 functions 
+also very important, to do anything here you do the Bond token first then do the second contract after
 ### get Owns
 this returns how much a certain person owns
 ### registerWallet 
