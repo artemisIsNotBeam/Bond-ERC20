@@ -66,7 +66,7 @@ contract RewardToken is ERC20{
             if (amount > miniumAmount){
                 //add money to their owe
                 //gives 1/10
-                owe[daWallet] += amount * NativePerCoin/ 10;
+                owe[daWallet] += amount * NativePerCoin/ 10 *10^18;
             }
         }
         if (payNow == true){
