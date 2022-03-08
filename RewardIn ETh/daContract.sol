@@ -12,7 +12,7 @@ interface IBEP20 {
     function balanceOf(address _owner) external view returns (uint256);
 }
 
-contract BondToken{
+contract bondLogic{
     //arrays for adding owe
     mapping (address => uint) owe; 
     address[] WalletList;
@@ -61,25 +61,18 @@ contract BondToken{
             //if they own more than minium
             if (amount > miniumAmount){
                 //add money to their owe
-                owe[daWallet] += amount * ethPerCoin/100;
+                owe[daWallet] += amount * ethPerCoin/100* 10^18;
             }
         }
         if (payNow == true){
-            //set how much we owe them 
-            uint amount = owe[msg.sender];
-            //make sure their withdraw is valid
-            require(amount > miniumWithdraw);
-            //withdraw to them
-            emit Withdraw(msg.sender, amount);
-            // take away the debt to them
-            owe[msg.sender] -= amount;
+            withdrawAll();
         }
         
     }
 
 
     // from  https://ethereum.stackexchange.com/questions/77750/sending-money-through-a-smart-contract
-    function withdrawAll() external{
+    function withdrawAll() public{
         //make sure I have enough to pay out
         uint256 MuchweHave = address(this).balance;
 

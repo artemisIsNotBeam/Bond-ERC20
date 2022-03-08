@@ -8,10 +8,10 @@ import "../token/ERC20/IERC20.sol";
 
 contract BondToken is ERC20 {
     // all these variable you can change
-    uint256 SupplyLeft = 300;
+    uint256 SupplyLeft = 300 * 10^18;
     //one onehundredeth
     uint256 ICOprice=1;
-    uint256 initialMintAMount = 20;         
+    uint256 initialMintAMount = 20*10^18;         
 
     event Withdraw(address reciever, uint amount);              
     event Deposit(address sender, uint amount);
@@ -30,7 +30,7 @@ contract BondToken is ERC20 {
         require(msg.value >= price);
         require(Howmany <= SupplyLeft);
         //make sure the persron has enough in their wallet and we have enough left
-        _mint(msg.sender, Howmany);
+        _mint(msg.sender, Howmany*10^18);
         emit Deposit(msg.sender, price);
         //give us the MULA and mint them coins
         SupplyLeft -= Howmany;
