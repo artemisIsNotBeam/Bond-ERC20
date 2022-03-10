@@ -13,3 +13,7 @@ this withdraws the amount we "owe" at owe[msg.sender]
 put money to give out into the contract
 ### ico logic 
 this is logic for an ico where they can "buy" the token if you don't want to do an Uni Pool
+
+
+#### Note: you will have to deploy 2 contracts
+one will sense needing a contract so yeah
