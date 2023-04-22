@@ -1,0 +1,451 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/artemisIsNotBeam/Bond-ERC20/blob/main/lands%20AI\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "HGSBKnTCTEyd"
+      },
+      "source": [
+        "**var declaration and imports**"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "-iwUNzn6TcR2",
+        "outputId": "7cba2276-2e9b-47f6-8b8a-e157ed8e8fe5"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Drive already mounted at /content/drive; to attempt to forcibly remount, call drive.mount(\"/content/drive\", force_remount=True).\n"
+          ]
+        }
+      ],
+      "source": [
+        "from google.colab import drive\n",
+        "drive.mount('/content/drive')"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "puJy-yPc-ubv"
+      },
+      "outputs": [],
+      "source": [
+        "import pandas as pd\n",
+        "import numpy as np\n",
+        "from tensorflow import keras\n",
+        "from tensorflow.keras import layers\n",
+        "\n",
+        "import tensorflow as tf\n",
+        "import tensorflow_probability as tfp\n",
+        "\n",
+        "train = pd.read_csv(\"drive/MyDrive/lands.csv\")\n",
+        "test = pd.read_csv(\"drive/MyDrive/testLands.csv\")"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "yxQS_ElTghcY"
+      },
+      "outputs": [],
+      "source": [
+        "#label is input\n",
+        "#feature is output\n",
+        "def get_features_labels(df):\n",
+        "  #gets the 1st and 2nd column\n",
+        "  features=df.values[:,[0,1]]\n",
+        "  labels = df.values[:,2]\n",
+        "\n",
+        "  return features, labels\n",
+        "\n",
+        "trainFeatures, trainLabels= get_features_labels(train)\n",
+        "testFeatures, testLabels= get_features_labels(test)\n",
+        "\n",
+        "trainFeatures = trainFeatures.astype('int')\n",
+        "trainLabels = trainLabels.astype('int32')\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "hT3yGgy1aG7M",
+        "outputId": "1adec27d-c3d8-41a5-ff20-4024687a8498"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Model: \"sequential\"\n",
+            "_________________________________________________________________\n",
+            " Layer (type)                Output Shape              Param #   \n",
+            "=================================================================\n",
+            " dense (Dense)               (None, 40)                120       \n",
+            "                                                                 \n",
+            "=================================================================\n",
+            "Total params: 120\n",
+            "Trainable params: 120\n",
+            "Non-trainable params: 0\n",
+            "_________________________________________________________________\n"
+          ]
+        }
+      ],
+      "source": [
+        "model = keras.Sequential()\n",
+        "model.add(keras.layers.Dense(40, input_shape=(2,)))\n",
+        "\n",
+        "model.compile(loss='mean_absolute_error', metrics=['accuracy'])\n",
+        "\n",
+        "model.summary()"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "sJCpe71rdUur",
+        "outputId": "79ff1b63-e1e0-40fc-98af-a05accf0a0bf"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "1/1 [==============================] - 1s 647ms/step - loss: 35.6390 - accuracy: 0.0500\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "<keras.callbacks.History at 0x7ff7c4b27df0>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 9
+        }
+      ],
+      "source": [
+        "#model.fit takes in https://github.com/keras-team/keras/blob/v2.11.0/keras/engine/training.py#L1303-L1729\n",
+        "\n",
+        "x = np.reshape(np.around(trainFeatures),(-1,2)).astype('int32')\n",
+        "y = np.reshape(np.around(trainLabels),(-1,1)).astype('int32')\n",
+        "\n",
+        "\n",
+        "model.fit(x,y, epochs=1, batch_size=40)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "kyq0-dJxW0Z0",
+        "outputId": "46b5a87b-8d3b-4392-98f9-811e97ba0637"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "1/1 [==============================] - 0s 174ms/step - loss: 35.1010 - accuracy: 0.0000e+00\n",
+            "0.0\n"
+          ]
+        }
+      ],
+      "source": [
+        "#testing our model\n",
+        "testFeatures = testFeatures.astype('int')\n",
+        "testLabels = testLabels.astype('int32')\n",
+        "\n",
+        "testFeatures = np.reshape(np.around(testFeatures),(-1,2)).astype('int32')\n",
+        "testLabels = np.reshape(np.around(testLabels),(-1,1)).astype('int32')\n",
+        "\n",
+        "testLoss, testAcc= model.evaluate(testFeatures, testLabels)\n",
+        "print(testAcc)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "FBj0gv-njp90",
+        "outputId": "3e7a8290-d073-45e8-e16d-43c0610fb69c"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "[21.17841633]\n"
+          ]
+        }
+      ],
+      "source": [
+        "import sklearn\n",
+        "# let's pull our handy linear fitter from our 'prediction' toolbox: sklearn!\n",
+        "from sklearn.linear_model import LinearRegression\n",
+        "\n",
+        "# set up our model\n",
+        "linear = LinearRegression()\n",
+        "\n",
+        "# train the model \n",
+        "linear.fit(trainFeatures,trainLabels)\n",
+        "\n",
+        "# test the model\n",
+        "X_new = np.array([[60, 65]])  # create a new data point\n",
+        "y_pred = linear.predict(X_new)  # predict the label for the new data point\n",
+        "\n",
+        "print(y_pred)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "eDFq11ZRL4XX"
+      },
+      "source": [
+        "**Prediction time!!!**\n",
+        "How to actually use\n",
+        "1. fill out cards in deck\n",
+        "2. fill out toal mana value\n",
+        "3. click run and see the print"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "_-A2dqTkL8Na",
+        "outputId": "20710c53-8274-48e3-fb75-b5163e1c75fb"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "(36, 35.62155485844855)\n"
+          ]
+        }
+      ],
+      "source": [
+        "#use a trained model to make predictions\n",
+        "cardsInDeck= 100\n",
+        "totalManaValue=125\n",
+        "#find mana value on moxfield\n",
+        "\n",
+        "def useModel(cards,mv):\n",
+        "  X_new = np.array([[cards, mv]])\n",
+        "  value = linear.predict(X_new)[0]\n",
+        "  cheap = round(linear.predict(X_new)[0])\n",
+        "  return cheap, value\n",
+        "  \n",
+        "\n",
+        "print(useModel(cardsInDeck,totalManaValue))"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "Ib0rflBCmIcY"
+      },
+      "source": [
+        "**flask!**"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "h_kXP9Aunsfa",
+        "outputId": "e8d06a34-6a13-4d37-fbb5-cb21acc1dffb"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Looking in indexes: https://pypi.org/simple, https://us-python.pkg.dev/colab-wheels/public/simple/\n",
+            "Collecting pyngrok\n",
+            "  Downloading pyngrok-6.0.0.tar.gz (681 kB)\n",
+            "\u001b[2K     \u001b[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m \u001b[32m681.2/681.2 kB\u001b[0m \u001b[31m10.1 MB/s\u001b[0m eta \u001b[36m0:00:00\u001b[0m\n",
+            "\u001b[?25h  Preparing metadata (setup.py) ... \u001b[?25l\u001b[?25hdone\n",
+            "Requirement already satisfied: PyYAML in /usr/local/lib/python3.9/dist-packages (from pyngrok) (6.0)\n",
+            "Building wheels for collected packages: pyngrok\n",
+            "  Building wheel for pyngrok (setup.py) ... \u001b[?25l\u001b[?25hdone\n",
+            "  Created wheel for pyngrok: filename=pyngrok-6.0.0-py3-none-any.whl size=19879 sha256=732c80ef884b088233c825d9c7fbf813443014398e7abfae7aebe99d8c173033\n",
+            "  Stored in directory: /root/.cache/pip/wheels/31/49/9c/44b13823eb256a3b4dff34b972f7a3c7d9910bfef269e59bd7\n",
+            "Successfully built pyngrok\n",
+            "Installing collected packages: pyngrok\n",
+            "Successfully installed pyngrok-6.0.0\n",
+            "/bin/bash: /ngrok: No such file or directory\n"
+          ]
+        }
+      ],
+      "source": [
+        "!pip install pyngrok\n",
+        "!/ngrok authtoken PASTE_YOUR_AUTHTOKEN_HERE"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "xhUYWnmDmLem",
+        "outputId": "0a9e80be-bd47-47c8-a468-4ec6c1cb599d"
+      },
+      "outputs": [
+        {
+          "metadata": {
+            "tags": null
+          },
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "To acess the link click https://2c17-35-192-36-232.ngrok-free.app\n",
+            " * Serving Flask app '__main__'\n",
+            " * Debug mode: off\n"
+          ]
+        },
+        {
+          "metadata": {
+            "tags": null
+          },
+          "name": "stderr",
+          "output_type": "stream",
+          "text": [
+            "INFO:werkzeug:\u001b[31m\u001b[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.\u001b[0m\n",
+            " * Running on http://127.0.0.1:5000\n",
+            "INFO:werkzeug:\u001b[33mPress CTRL+C to quit\u001b[0m\n",
+            "ERROR:__main__:Exception on / [GET]\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/usr/local/lib/python3.9/dist-packages/flask/app.py\", line 2528, in wsgi_app\n",
+            "    response = self.full_dispatch_request()\n",
+            "  File \"/usr/local/lib/python3.9/dist-packages/flask/app.py\", line 1825, in full_dispatch_request\n",
+            "    rv = self.handle_user_exception(e)\n",
+            "  File \"/usr/local/lib/python3.9/dist-packages/flask/app.py\", line 1823, in full_dispatch_request\n",
+            "    rv = self.dispatch_request()\n",
+            "  File \"/usr/local/lib/python3.9/dist-packages/flask/app.py\", line 1799, in dispatch_request\n",
+            "    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)\n",
+            "  File \"<ipython-input-15-422524902f50>\", line 10, in home\n",
+            "    return render_template(\"drive/MyDrive/website/templates/home.html\")\n",
+            "  File \"/usr/local/lib/python3.9/dist-packages/flask/templating.py\", line 146, in render_template\n",
+            "    template = app.jinja_env.get_or_select_template(template_name_or_list)\n",
+            "  File \"/usr/local/lib/python3.9/dist-packages/jinja2/environment.py\", line 1081, in get_or_select_template\n",
+            "    return self.get_template(template_name_or_list, parent, globals)\n",
+            "  File \"/usr/local/lib/python3.9/dist-packages/jinja2/environment.py\", line 1010, in get_template\n",
+            "    return self._load_template(name, globals)\n",
+            "  File \"/usr/local/lib/python3.9/dist-packages/jinja2/environment.py\", line 969, in _load_template\n",
+            "    template = self.loader.load(self, name, self.make_globals(globals))\n",
+            "  File \"/usr/local/lib/python3.9/dist-packages/jinja2/loaders.py\", line 126, in load\n",
+            "    source, filename, uptodate = self.get_source(environment, name)\n",
+            "  File \"/usr/local/lib/python3.9/dist-packages/flask/templating.py\", line 62, in get_source\n",
+            "    return self._get_source_fast(environment, template)\n",
+            "  File \"/usr/local/lib/python3.9/dist-packages/flask/templating.py\", line 98, in _get_source_fast\n",
+            "    raise TemplateNotFound(template)\n",
+            "jinja2.exceptions.TemplateNotFound: drive/MyDrive/website/templates/home.html\n",
+            "INFO:werkzeug:127.0.0.1 - - [22/Apr/2023 01:12:36] \"\u001b[35m\u001b[1mGET / HTTP/1.1\u001b[0m\" 500 -\n",
+            "INFO:werkzeug:127.0.0.1 - - [22/Apr/2023 01:12:37] \"\u001b[33mGET /favicon.ico HTTP/1.1\u001b[0m\" 404 -\n"
+          ]
+        }
+      ],
+      "source": [
+        "from flask import Flask, render_template,request,url_for,redirect\n",
+        "from pyngrok import ngrok\n",
+        "\n",
+        "ngrok.set_auth_token(\"27wLnqGo1c0HZ9MLEeIVT9n5xsV_2ajtWDyopZfzXPmkzk1GC\")\n",
+        "publicUrl = ngrok.connect(5000).public_url\n",
+        "app = Flask(__name__)\n",
+        "\n",
+        "@app.route(\"/\")\n",
+        "def home():\n",
+        "  return render_template(\"drive/MyDrive/website/templates/home.html\")\n",
+        "@app.route(\"/predict\", methods= ['POST', 'GET'])\n",
+        "def predict():\n",
+        "  output = request.form.to_dict()\n",
+        "  if len(output)==0:\n",
+        "    return f\"<p>go back home! you can't do this or you did it wrong</p> <a href={url_for('home')}>home</a> <p>or if you don't know how to write it correctly,</p> <a href={url_for('guide')}>click me!</a>\"\n",
+        "\n",
+        "  lands = float(output[\"lands\"])\n",
+        "  mv = float(output[\"mv\"])\n",
+        "\n",
+        "  should,exact = useModel(lands,mv)\n",
+        "  return f\"<p>the ai thinks you should run {should} lands and and exaclty {exact}</p><a href={url_for('home')}>home</a>\"\n",
+        "\n",
+        "@app.route(\"/guide\")\n",
+        "def guide():\n",
+        "  return f'''<h1>welcome to the guide of find the card count and mana value</h1>\n",
+        "            <a href={url_for('home')}>home</a>\n",
+        "            <p>if your deck is on moxfield great! if its not we gotta get there</p>\n",
+        "            <ol>\n",
+        "              <li>make sure you have a list you can paste into moxfield</li>\n",
+        "              <li>go into moxfield and create a new deck</li>\n",
+        "              <li>note your card count</li>\n",
+        "              <li>scroll down to under sample hand and note down your total mana value(i call it mv)</li>\n",
+        "              <li>go back to home thru the link</li>\n",
+        "            </ol>'''\n",
+        "print(f\"To acess the link click {publicUrl}\")\n",
+        "app.run()"
+      ]
+    }
+  ],
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyMI7P/m7mbcU5zYCy0gMxF9",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "display_name": "Python 3",
+      "name": "python3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 0
+}
